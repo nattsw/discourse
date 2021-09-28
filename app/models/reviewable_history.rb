@@ -7,9 +7,17 @@ class ReviewableHistory < ActiveRecord::Base
   enum status: %i[pending approved rejected ignored deleted]
   enum reviewable_history_type: %i[created transitioned edited claimed unclaimed]
 
+  after_commit :compute_user_stats
+
   # Backward compatibility
   class << self
     alias types reviewable_history_types
+  end
+
+  private
+
+  def compute_user_stats
+    reviewable.compute_user_stats
   end
 end
 

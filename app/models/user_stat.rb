@@ -288,6 +288,10 @@ class UserStat < ActiveRecord::Base
     Discourse.redis.setex(last_seen_key(id), MAX_TIME_READ_DIFF, val)
   end
 
+  def update_pending_posts
+    update(pending_posts_count: user.pending_posts.count)
+  end
+
   protected
 
   def trigger_badges

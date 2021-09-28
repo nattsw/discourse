@@ -30,9 +30,12 @@ export default Controller.extend({
 
   @discourseComputed("currentUser.draft_count")
   draftLabel(count) {
-    return count > 0
-      ? I18n.t("drafts.label_with_count", { count })
-      : I18n.t("drafts.label");
+    return I18n.t("drafts.label", { count });
+  },
+
+  @discourseComputed("currentUser.pending_posts_count")
+  pendingLabel(count) {
+    return I18n.t("pending_posts", { count });
   },
 
   actions: {
