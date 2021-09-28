@@ -290,6 +290,11 @@ class UserStat < ActiveRecord::Base
 
   def update_pending_posts
     update(pending_posts_count: user.pending_posts.count)
+    MessageBus.publish(
+      '/user',
+      { pending_posts_count: pending_posts_count },
+      user_ids: [user.id]
+    )
   end
 
   protected
