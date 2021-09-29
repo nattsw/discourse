@@ -1,17 +1,13 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import { observes } from "discourse-common/utils/decorators";
 
 export default DiscourseRoute.extend({
   model() {
     return this.store.findAll("pending-post");
   },
 
-  activate() {
-    this.messageBus.subscribe("/user", (data) => {
-      if (data.hasOwnProperty("pending_posts_count")) { this.refresh(); }
-    });
+  @observes("currentUser.pending_posts_count")
+  _refreshModel: function() {
+    this.refresh();
   },
-
-  deactivate() {
-    this.messageBus.unsubscribe("/user");
-  }
 });

@@ -33,11 +33,6 @@ export default Controller.extend({
     return I18n.t("drafts.label", { count });
   },
 
-  @discourseComputed("currentUser.pending_posts_count")
-  pendingLabel(count) {
-    return I18n.t("pending_posts", { count });
-  },
-
   actions: {
     exportUserArchive() {
       bootbox.confirm(

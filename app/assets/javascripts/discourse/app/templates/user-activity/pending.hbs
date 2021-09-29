@@ -28,5 +28,12 @@
         }}
       </p>
     </li>
+  {{else}}
+    <div class="empty-state">
+      <span class="empty-state-title">{{i18n "no_pending_posts.title"}}</span>
+      <div class="empty-state-body">
+        <p>{{i18n "no_pending_posts.body"}}</p>
+      </div>
+    </div>
   {{/each}}
 </ul>

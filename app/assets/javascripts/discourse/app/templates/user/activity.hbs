@@ -18,7 +18,7 @@
       {{/if}}
 
       {{#d-navigation-item route="userActivity.pending"}}
-        {{pendingLabel}}
+        {{i18n "pending_posts" count=currentUser.pending_posts_count}}
       {{/d-navigation-item}}
 
       {{#d-navigation-item route="userActivity.likesGiven"}}{{i18n "user_action_groups.1"}}{{/d-navigation-item}}
