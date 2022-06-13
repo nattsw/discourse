@@ -344,10 +344,10 @@ JSONStream@^1.0.3:
     jsonparse "^1.2.0"
     through ">=2.2.7 <3"
 
-ace-builds@1.4.13:
-  version "1.4.13"
-  resolved "https://registry.yarnpkg.com/ace-builds/-/ace-builds-1.4.13.tgz#186f42d3849ebcc6a48b93088a058489897514c1"
-  integrity sha512-SOLzdaQkY6ecPKYRDDg+MY1WoGgXA34cIvYJNNoBMGGUswHmlauU2Hy0UL96vW0Fs/LgFbMUjD+6vqzWTldIYQ==
+ace-builds@1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/ace-builds/-/ace-builds-1.5.1.tgz#7ed9fe277acdc14e6522aa866b0980ac196d797e"
+  integrity sha512-2G313uyM7lfqZgCs6xCW4QPeuX2GZKaCyRqKhTC2mBeZqC7TjkTXguKRyLzsAIMLJfj3koq98RXCBoemoZVAnQ==
 
 acorn-jsx@^5.2.0:
   version "5.3.1"
