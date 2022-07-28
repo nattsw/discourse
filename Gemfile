@@ -23,7 +23,7 @@ else
   gem 'actionpack', rails_version
   gem 'actionview', rails_version
   gem 'activemodel', rails_version
-  gem 'activerecord', rails_version
+  gem 'activerecord', '>= 7.0.3.1', rails_version
   gem 'activesupport', rails_version
   gem 'railties', rails_version
   gem 'sprockets-rails'
