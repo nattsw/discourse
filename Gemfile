@@ -93,7 +93,7 @@ gem 'image_optim'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
-gem 'loofah'
+gem 'loofah', '>= 2.19.1'
 gem 'css_parser', require: false
 
 gem 'omniauth'
