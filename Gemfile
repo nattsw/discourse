@@ -248,7 +248,7 @@ gem 'sshkey', require: false
 gem 'rchardet', require: false
 gem 'lz4-ruby', require: false, platform: :ruby
 
-gem 'sanitize'
+gem 'sanitize', '>= 6.0.1'
 
 if ENV["IMPORT"] == "1"
   gem 'mysql2'
