@@ -73,7 +73,7 @@
     "select-kit": "^1.0.0",
     "sinon": "^13.0.1",
     "virtual-dom": "^2.1.1",
-    "webpack": "^5.67.0"
+    "webpack": "^5.76.0"
   },
   "engines": {
     "node": "12.* || 14.* || >= 16",
