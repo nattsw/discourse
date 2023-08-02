@@ -327,8 +327,8 @@ GEM
     puma (6.2.2)
       nio4r (~> 2.0)
     racc (1.6.2)
-    rack (2.2.7)
-    rack-mini-profiler (3.1.0)
+    rack (2.2.8)
+    rack-mini-profiler (3.1.1)
       rack (>= 1.2.0)
     rack-protection (3.0.6)
       rack
@@ -444,13 +444,13 @@ GEM
     sass-embedded (1.62.1)
       google-protobuf (~> 3.21)
       rake (>= 10.0.0)
-    sass-embedded (1.62.1-aarch64-linux-gnu)
+    sass-embedded (1.62.1-aarch64-linux)
       google-protobuf (~> 3.21)
     sass-embedded (1.62.1-arm64-darwin)
       google-protobuf (~> 3.21)
     sass-embedded (1.62.1-x86_64-darwin)
       google-protobuf (~> 3.21)
-    sass-embedded (1.62.1-x86_64-linux-gnu)
+    sass-embedded (1.62.1-x86_64-linux)
       google-protobuf (~> 3.21)
     selenium-webdriver (4.9.0)
       rexml (~> 3.2, >= 3.2.5)
@@ -620,7 +620,7 @@ DEPENDENCIES
   pry-rails
   puma
   rack
-  rack-mini-profiler
+  rack-mini-profiler (>= 3.1.1)
   rack-protection
   rails_failover
   rails_multisite
