@@ -324,7 +324,7 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (5.0.1)
-    puma (6.2.2)
+    puma (6.3.1)
       nio4r (~> 2.0)
     racc (1.6.2)
     rack (2.2.7)
@@ -444,13 +444,13 @@ GEM
     sass-embedded (1.62.1)
       google-protobuf (~> 3.21)
       rake (>= 10.0.0)
-    sass-embedded (1.62.1-aarch64-linux-gnu)
+    sass-embedded (1.62.1-aarch64-linux)
       google-protobuf (~> 3.21)
     sass-embedded (1.62.1-arm64-darwin)
       google-protobuf (~> 3.21)
     sass-embedded (1.62.1-x86_64-darwin)
       google-protobuf (~> 3.21)
-    sass-embedded (1.62.1-x86_64-linux-gnu)
+    sass-embedded (1.62.1-x86_64-linux)
       google-protobuf (~> 3.21)
     selenium-webdriver (4.9.0)
       rexml (~> 3.2, >= 3.2.5)
@@ -618,7 +618,7 @@ DEPENDENCIES
   pg
   pry-byebug
   pry-rails
-  puma
+  puma (>= 6.3.1)
   rack
   rack-mini-profiler
   rack-protection
