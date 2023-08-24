@@ -19,13 +19,13 @@ else
   #
   # To issue a rails update bump the version number here
   rails_version = "7.0.4.3"
-  gem "actionmailer", rails_version
-  gem "actionpack", rails_version
-  gem "actionview", rails_version
-  gem "activemodel", rails_version
-  gem "activerecord", rails_version
-  gem "activesupport", rails_version
-  gem "railties", rails_version
+  gem "actionmailer", ">= 7.0.7.1", rails_version
+  gem "actionpack", ">= 7.0.7.1", rails_version
+  gem "actionview", ">= 7.0.7.1", rails_version
+  gem "activemodel", ">= 7.0.7.1", rails_version
+  gem "activerecord", ">= 7.0.7.1", rails_version
+  gem "activesupport", ">= 7.0.7.1", rails_version
+  gem "railties", ">= 7.0.7.1", rails_version
   gem "sprockets-rails"
 end
 
@@ -37,7 +37,7 @@ gem "sprockets", git: "https://github.com/rails/sprockets", branch: "3.x"
 
 # this will eventually be added to rails,
 # allows us to precompile all our templates in the unicorn master
-gem "actionview_precompiler", require: false
+gem "actionview_precompiler", ">= 0.3.0", require: false
 
 gem "discourse-seed-fu"
 
@@ -59,7 +59,7 @@ gem "redis-namespace"
 # we used an old branch which is the fastest one out there
 # are long term goal here is to fork this gem so we have a
 # better maintained living fork
-gem "active_model_serializers", "~> 0.8.3"
+gem "active_model_serializers", "~> 0.9.0"
 
 gem "http_accept_language", require: false
 
@@ -67,7 +67,7 @@ gem "discourse-fonts", require: "discourse_fonts"
 
 gem "message_bus"
 
-gem "rails_multisite"
+gem "rails_multisite", ">= 5.0.0"
 
 gem "fast_xs", platform: :ruby
 
@@ -156,7 +156,7 @@ group :test, :development do
 
   gem "rb-fsevent", require: RUBY_PLATFORM =~ /darwin/i ? "rb-fsevent" : false
 
-  gem "rspec-rails"
+  gem "rspec-rails", ">= 6.0.2"
 
   gem "shoulda-matchers", require: false
   gem "rspec-html-matchers"
@@ -164,7 +164,7 @@ group :test, :development do
   gem "rubocop-discourse", require: false
   gem "parallel_tests"
 
-  gem "rswag-specs"
+  gem "rswag-specs", ">= 2.10.0"
 
   gem "annotate"
 
@@ -223,7 +223,7 @@ gem "memory_profiler", require: false, platform: :mri
 
 gem "cppjieba_rb", require: false
 
-gem "lograge", require: false
+gem "lograge", ">= 0.13.0", require: false
 gem "logstash-event", require: false
 gem "logstash-logger", require: false
 gem "logster"
@@ -263,7 +263,7 @@ gem "web-push"
 gem "colored2", require: false
 gem "maxminddb"
 
-gem "rails_failover", require: false
+gem "rails_failover", ">= 2.0.0", require: false
 
 gem "faraday"
 gem "faraday-retry"
