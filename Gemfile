@@ -164,7 +164,7 @@ group :test, :development do
   gem "rubocop-discourse", require: false
   gem "parallel_tests"
 
-  gem "rswag-specs"
+  gem "rswag-specs", ">= 2.11.0"
 
   gem "annotate"
 
@@ -223,7 +223,7 @@ gem "memory_profiler", require: false, platform: :mri
 
 gem "cppjieba_rb", require: false
 
-gem "lograge", require: false
+gem "lograge", ">= 0.14.0", require: false
 gem "logstash-event", require: false
 gem "logstash-logger", require: false
 gem "logster"
