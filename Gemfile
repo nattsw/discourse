@@ -230,7 +230,7 @@ gem "logster"
 
 # These are forks of sassc and sassc-rails with dart-sass support
 gem "dartsass-ruby"
-gem "dartsass-sprockets"
+gem "dartsass-sprockets", ">= 3.1.0"
 
 gem "rotp", require: false
 
