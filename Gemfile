@@ -118,7 +118,7 @@ gem "highline", require: false
 
 gem "rack"
 
-gem "rack-protection" # security
+gem "rack-protection" , ">= 4.0.0" # security
 gem "cbor", require: false
 gem "cose", require: false
 gem "addressable"
