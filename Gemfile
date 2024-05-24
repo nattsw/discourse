@@ -88,7 +88,7 @@ gem "loofah"
 gem "css_parser", require: false
 
 gem "omniauth"
-gem "omniauth-facebook"
+gem "omniauth-facebook", ">= 10.0.0"
 gem "omniauth-twitter"
 gem "omniauth-github"
 
