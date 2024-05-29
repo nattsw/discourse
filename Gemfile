@@ -268,7 +268,7 @@ gem "web-push"
 gem "colored2", require: false
 gem "maxminddb"
 
-gem "rails_failover", require: false
+gem "rails_failover", ">= 2.1.0", require: false
 
 gem "faraday"
 gem "faraday-retry"
