@@ -238,7 +238,7 @@ GEM
     mini_portile2 (2.8.4)
     mini_racer (0.8.0)
       libv8-node (~> 18.16.0.0)
-    mini_scheduler (0.16.0)
+    mini_scheduler (0.17.0)
       sidekiq (>= 4.2.3, < 7.0)
     mini_sql (1.5.0)
     mini_suffix (0.3.3)
@@ -334,7 +334,7 @@ GEM
     puma (6.3.1)
       nio4r (~> 2.0)
     racc (1.7.1)
-    rack (2.2.8)
+    rack (2.2.9)
     rack-mini-profiler (3.1.1)
       rack (>= 1.2.0)
     rack-protection (3.1.0)
@@ -373,7 +373,10 @@ GEM
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
     rchardet (1.8.0)
-    redis (4.8.1)
+    redis (5.2.0)
+      redis-client (>= 0.22.0)
+    redis-client (0.22.2)
+      connection_pool
     redis-namespace (1.11.0)
       redis (>= 4)
     regexp_parser (2.8.1)
@@ -458,22 +461,22 @@ GEM
     sass-embedded (1.66.1)
       google-protobuf (~> 3.23)
       rake (>= 13.0.0)
-    sass-embedded (1.66.1-aarch64-linux-gnu)
+    sass-embedded (1.66.1-aarch64-linux)
       google-protobuf (~> 3.23)
     sass-embedded (1.66.1-arm64-darwin)
       google-protobuf (~> 3.23)
     sass-embedded (1.66.1-x86_64-darwin)
       google-protobuf (~> 3.23)
-    sass-embedded (1.66.1-x86_64-linux-gnu)
+    sass-embedded (1.66.1-x86_64-linux)
       google-protobuf (~> 3.23)
     selenium-webdriver (4.12.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
-    sidekiq (6.5.9)
-      connection_pool (>= 2.2.5, < 3)
+    sidekiq (6.5.5)
+      connection_pool (>= 2.2.2)
       rack (~> 2.0)
-      redis (>= 4.5.0, < 5)
+      redis (>= 4.5.0)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -603,7 +606,7 @@ DEPENDENCIES
   message_bus
   mini_mime
   mini_racer
-  mini_scheduler
+  mini_scheduler (>= 0.17.0)
   mini_sql
   mini_suffix
   minio_runner
