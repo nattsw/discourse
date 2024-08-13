@@ -120,7 +120,7 @@ gem "rack"
 
 gem "rack-protection" # security
 gem "cbor", require: false
-gem "cose", require: false
+gem "cose", ">= 1.3.1", require: false
 gem "addressable"
 gem "json_schemer"
 
