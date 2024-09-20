@@ -262,7 +262,7 @@ GEM
       timeout
     net-smtp (0.3.3)
       net-protocol
-    nio4r (2.5.9)
+    nio4r (2.7.3)
     nokogiri (1.15.4)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
@@ -331,7 +331,7 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (5.0.3)
-    puma (6.3.1)
+    puma (6.4.3)
       nio4r (~> 2.0)
     racc (1.7.1)
     rack (2.2.8)
@@ -458,13 +458,13 @@ GEM
     sass-embedded (1.66.1)
       google-protobuf (~> 3.23)
       rake (>= 13.0.0)
-    sass-embedded (1.66.1-aarch64-linux-gnu)
+    sass-embedded (1.66.1-aarch64-linux)
       google-protobuf (~> 3.23)
     sass-embedded (1.66.1-arm64-darwin)
       google-protobuf (~> 3.23)
     sass-embedded (1.66.1-x86_64-darwin)
       google-protobuf (~> 3.23)
-    sass-embedded (1.66.1-x86_64-linux-gnu)
+    sass-embedded (1.66.1-x86_64-linux)
       google-protobuf (~> 3.23)
     selenium-webdriver (4.12.0)
       rexml (~> 3.2, >= 3.2.5)
@@ -627,7 +627,7 @@ DEPENDENCIES
   pg
   pry-byebug
   pry-rails
-  puma
+  puma (>= 6.4.3)
   rack
   rack-mini-profiler
   rack-protection
