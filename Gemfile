@@ -19,13 +19,13 @@ else
   #
   # To issue a rails update bump the version number here
   rails_version = "7.0.7"
-  gem "actionmailer", rails_version
-  gem "actionpack", rails_version
+  gem "actionmailer", ">= 7.0.8.7", rails_version
+  gem "actionpack", ">= 7.0.8.7", rails_version
   gem "actionview", rails_version
   gem "activemodel", rails_version
   gem "activerecord", rails_version
   gem "activesupport", rails_version
-  gem "railties", rails_version
+  gem "railties", ">= 7.0.8.7", rails_version
   gem "sprockets-rails"
 end
 
