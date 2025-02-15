@@ -19,7 +19,7 @@ else
   #
   # To issue a rails update bump the version number here
   rails_version = "7.0.7"
-  gem "actionmailer", rails_version
+  gem "actionmailer", ">= 7.2.0", rails_version
   gem "actionpack", rails_version
   gem "actionview", rails_version
   gem "activemodel", rails_version
@@ -116,7 +116,7 @@ gem "mini_racer"
 
 gem "highline", require: false
 
-gem "rack"
+gem "rack", ">= 2.2.11"
 
 gem "rack-protection" # security
 gem "cbor", require: false
@@ -125,7 +125,7 @@ gem "addressable"
 gem "json_schemer"
 
 gem "net-smtp", require: false
-gem "net-imap", require: false
+gem "net-imap", ">= 0.3.8", require: false
 gem "net-pop", require: false
 gem "digest", require: false
 
