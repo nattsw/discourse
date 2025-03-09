@@ -108,7 +108,7 @@ gem "rake"
 gem "thor", require: false
 gem "diffy", require: false
 gem "rinku"
-gem "sidekiq"
+gem "sidekiq", ">= 8.0.0"
 gem "mini_scheduler"
 
 gem "execjs", require: false
@@ -116,7 +116,7 @@ gem "mini_racer"
 
 gem "highline", require: false
 
-gem "rack"
+gem "rack", ">= 2.2.12"
 
 gem "rack-protection" # security
 gem "cbor", require: false
@@ -278,6 +278,6 @@ gem "faraday-retry"
 gem "net-http"
 
 # Workaround until Ruby ships with cgi version 0.3.6 or higher.
-gem "cgi", ">= 0.3.6", require: false
+gem "cgi", ">= 0.3.7", require: false
 
 gem "tzinfo-data"
