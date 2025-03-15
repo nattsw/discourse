@@ -116,7 +116,7 @@ gem "mini_racer"
 
 gem "highline", require: false
 
-gem "rack"
+gem "rack", ">= 2.2.13"
 
 gem "rack-protection" # security
 gem "cbor", require: false
@@ -230,7 +230,7 @@ gem "logster"
 
 # These are forks of sassc and sassc-rails with dart-sass support
 gem "dartsass-ruby"
-gem "dartsass-sprockets"
+gem "dartsass-sprockets", ">= 3.1.0"
 
 gem "rotp", require: false
 
