@@ -156,7 +156,7 @@ group :test, :development do
 
   gem "rb-fsevent", require: RUBY_PLATFORM =~ /darwin/i ? "rb-fsevent" : false
 
-  gem "rspec-rails"
+  gem "rspec-rails", ">= 8.0.0"
 
   gem "shoulda-matchers", require: false, github: "thoughtbot/shoulda-matchers"
   gem "rspec-html-matchers"
