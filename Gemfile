@@ -19,14 +19,14 @@ else
   #
   # To issue a rails update bump the version number here
   rails_version = "7.0.7"
-  gem "actionmailer", rails_version
-  gem "actionpack", rails_version
+  gem "actionmailer", ">= 7.0.7.1", rails_version
+  gem "actionpack", ">= 7.0.7.1", rails_version
   gem "actionview", rails_version
   gem "activemodel", rails_version
   gem "activerecord", rails_version
   gem "activesupport", rails_version
-  gem "railties", rails_version
-  gem "sprockets-rails"
+  gem "railties", ">= 7.0.7.1", rails_version
+  gem "sprockets-rails", ">= 3.5.0"
 end
 
 gem "json"
@@ -65,9 +65,9 @@ gem "http_accept_language", require: false
 
 gem "discourse-fonts", require: "discourse_fonts"
 
-gem "message_bus"
+gem "message_bus", ">= 4.3.9"
 
-gem "rails_multisite"
+gem "rails_multisite", ">= 5.0.1"
 
 gem "fast_xs", platform: :ruby
 
@@ -87,14 +87,14 @@ gem "nokogiri"
 gem "loofah"
 gem "css_parser", require: false
 
-gem "omniauth"
-gem "omniauth-facebook"
+gem "omniauth", ">= 2.0.0"
+gem "omniauth-facebook", ">= 10.0.0"
 gem "omniauth-twitter"
-gem "omniauth-github"
+gem "omniauth-github", ">= 2.0.0"
 
-gem "omniauth-oauth2", require: false
+gem "omniauth-oauth2", ">= 1.8.0", require: false
 
-gem "omniauth-google-oauth2"
+gem "omniauth-google-oauth2", ">= 1.0.0"
 
 gem "oj"
 
@@ -108,17 +108,17 @@ gem "rake"
 gem "thor", require: false
 gem "diffy", require: false
 gem "rinku"
-gem "sidekiq"
-gem "mini_scheduler"
+gem "sidekiq", ">= 6.5.10"
+gem "mini_scheduler", ">= 0.17.0"
 
 gem "execjs", require: false
 gem "mini_racer"
 
 gem "highline", require: false
 
-gem "rack"
+gem "rack", ">= 2.2.20"
 
-gem "rack-protection" # security
+gem "rack-protection" , ">= 3.2.0" # security
 gem "cbor", require: false
 gem "cose", require: false
 gem "addressable"
@@ -136,7 +136,7 @@ group :assets do
 end
 
 group :test do
-  gem "capybara", require: false
+  gem "capybara", ">= 3.40.0", require: false
   gem "webmock", require: false
   gem "fakeweb", require: false
   gem "minitest", require: false
@@ -156,7 +156,7 @@ group :test, :development do
 
   gem "rb-fsevent", require: RUBY_PLATFORM =~ /darwin/i ? "rb-fsevent" : false
 
-  gem "rspec-rails"
+  gem "rspec-rails", ">= 6.0.4"
 
   gem "shoulda-matchers", require: false, github: "thoughtbot/shoulda-matchers"
   gem "rspec-html-matchers"
@@ -164,7 +164,7 @@ group :test, :development do
   gem "rubocop-discourse", require: false
   gem "parallel_tests"
 
-  gem "rswag-specs"
+  gem "rswag-specs", ">= 2.11.0"
 
   gem "annotate"
 
@@ -205,7 +205,7 @@ gem "htmlentities", require: false
 #  If you want to amend mini profiler to do the monkey patches in the railties
 #  we are open to it. by deferring require to the initializer we can configure discourse installs without it
 
-gem "rack-mini-profiler", require: ["enable_rails_patches"]
+gem "rack-mini-profiler", ">= 3.2.0", require: ["enable_rails_patches"]
 
 gem "unicorn", require: false, platform: :ruby
 gem "puma", require: false
@@ -223,14 +223,14 @@ gem "memory_profiler", require: false, platform: :mri
 
 gem "cppjieba_rb", require: false
 
-gem "lograge", require: false
+gem "lograge", ">= 0.14.0", require: false
 gem "logstash-event", require: false
 gem "logstash-logger", require: false
 gem "logster"
 
 # These are forks of sassc and sassc-rails with dart-sass support
 gem "dartsass-ruby"
-gem "dartsass-sprockets"
+gem "dartsass-sprockets", ">= 3.1.0"
 
 gem "rotp", require: false
 
@@ -268,7 +268,7 @@ gem "web-push"
 gem "colored2", require: false
 gem "maxminddb"
 
-gem "rails_failover", require: false
+gem "rails_failover", ">= 2.1.0", require: false
 
 gem "faraday"
 gem "faraday-retry"
