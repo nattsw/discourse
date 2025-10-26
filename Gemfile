@@ -41,7 +41,7 @@ gem "actionview_precompiler", require: false
 
 gem "discourse-seed-fu"
 
-gem "mail"
+gem "mail", ">= 2.9.0"
 gem "mini_mime"
 gem "mini_suffix"
 
