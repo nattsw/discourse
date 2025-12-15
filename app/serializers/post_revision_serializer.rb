@@ -179,7 +179,15 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def include_tags_changes?
-    previous["tags"] != current["tags"] && scope.can_see_tags?(topic)
+    return false unless scope.can_see_tags?(topic)
+    prev = previous["tags"]
+    curr = current["tags"]
+    # if either is not an array (malformed data), compare directly
+    return prev != curr unless prev.is_a?(Array) && curr.is_a?(Array)
+    # compare filtered tags by name to handle mixed formats
+    prev_names = extract_tag_names(filter_tags(prev))
+    curr_names = extract_tag_names(filter_tags(curr))
+    prev_names != curr_names
   end
 
   def category_id_changes
@@ -245,7 +253,9 @@ class PostRevisionSerializer < ApplicationSerializer
       topic.featured_link,
     ] if SiteSetting.topic_featured_link_enabled
 
-    latest_modifications["tags"] = [topic.tags.map(&:name).sort]
+    latest_modifications["tags"] = [
+      topic.tags.map { |tag| { id: tag.id, name: tag.name } }.sort_by { |t| t[:name] },
+    ]
 
     post_revisions << PostRevision.new(
       number: post_revisions.last.number + 1,
@@ -297,7 +307,16 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def filter_tags(tags)
-    tags.is_a?(Array) && tags.any? ? tags - hidden_tags : tags
+    return tags unless tags.is_a?(Array) && tags.any?
+    tags.reject do |tag|
+      tag_name = tag.is_a?(Hash) ? tag[:name] : tag
+      hidden_tags.include?(tag_name)
+    end
+  end
+
+  def extract_tag_names(tags)
+    return [] unless tags.is_a?(Array)
+    tags.map { |tag| tag.is_a?(Hash) ? tag[:name] : tag }.sort
   end
 
   def filter_category_id(category_id)

@@ -23,8 +23,8 @@ module UserTagNotificationsMixin
 
   def tags_with_notification_level(lookup_level)
     tag_user_notification_levels
-      .select { |id, level| level == TagUser.notification_levels[lookup_level] }
-      .keys
+      .select { |tag| tag[:level] == TagUser.notification_levels[lookup_level] }
+      .map { |tag| { id: tag[:id], name: tag[:name] } }
   end
 
   def tag_user_notification_levels

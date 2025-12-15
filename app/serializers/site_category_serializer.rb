@@ -18,7 +18,7 @@ class SiteCategorySerializer < BasicCategorySerializer
   end
 
   def allowed_tags
-    object.tags.pluck(:name)
+    object.tags.map { |tag| { id: tag.id, name: tag.name } }
   end
 
   def include_allowed_tag_groups?

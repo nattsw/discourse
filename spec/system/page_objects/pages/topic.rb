@@ -353,6 +353,11 @@ module PageObjects
         find(".posts-filtered-notice").has_text?(text, exact: false)
       end
 
+      def topic_tags
+        tags_selector = ".title-wrapper .topic-category .list-tags .discourse-tags .discourse-tag"
+        all(tags_selector).map(&:text)
+      end
+
       private
 
       def within_topic_footer_buttons

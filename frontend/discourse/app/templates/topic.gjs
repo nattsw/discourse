@@ -154,7 +154,7 @@ export default <template>
                     }}
                   >
                     <MiniTagChooser
-                      @value={{@controller.buffered.tags}}
+                      @tags={{@controller.buffered.tags}}
                       @onChange={{@controller.topicTagsChanged}}
                       @options={{hash
                         filterable=true

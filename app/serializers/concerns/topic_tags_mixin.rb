@@ -13,7 +13,8 @@ module TopicTagsMixin
   end
 
   def tags
-    all_tags.map(&:name)
+    # callers might explode since it used to return string array
+    all_tags.map { |tag| { id: tag.id, name: tag.name } }
   end
 
   def tags_descriptions

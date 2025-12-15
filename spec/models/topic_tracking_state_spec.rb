@@ -82,6 +82,24 @@ RSpec.describe TopicTrackingState do
   describe ".publish_new" do
     include_examples("publishes message to right groups and users", "/new", :publish_new)
     include_examples("does not publish message for private topics", :publish_new)
+
+    it "sends tags as array of objects with id and name" do
+      SiteSetting.tagging_enabled = true
+      tag1 = Fabricate(:tag, name: "foo")
+      tag2 = Fabricate(:tag, name: "bar")
+      topic.tags = [tag1, tag2]
+
+      message = MessageBus.track_publish("/new") { described_class.publish_new(topic) }.first
+
+      tags = message.data["payload"]["tags"]
+      expect(tags).to be_an(Array)
+      expect(tags.length).to eq(2)
+      expect(tags[0]).to match(hash_including("id" => tag1.id, "name" => "foo"))
+      expect(tags[1]).to match(hash_including("id" => tag2.id, "name" => "bar"))
+
+      # verify backward compatibility field
+      expect(message.data["payload"]["topic_tag_ids"]).to match_array([tag1.id, tag2.id])
+    end
   end
 
   describe ".publish_latest" do
@@ -98,6 +116,20 @@ RSpec.describe TopicTrackingState do
       expect(data["payload"]["archetype"]).to eq(Archetype.default)
       expect(message.group_ids).to eq(nil)
       expect(message.user_ids).to eq(nil)
+    end
+
+    it "sends tags as array of objects with id and name" do
+      SiteSetting.tagging_enabled = true
+      tag1 = Fabricate(:tag, name: "baz")
+      topic.tags = [tag1]
+
+      message = MessageBus.track_publish("/latest") { described_class.publish_latest(topic) }.first
+
+      tags = message.data["payload"]["tags"]
+      expect(tags).to be_an(Array)
+      expect(tags.length).to eq(1)
+      expect(tags[0]).to match(hash_including("id" => tag1.id, "name" => "baz"))
+      expect(message.data["payload"]["topic_tag_ids"]).to eq([tag1.id])
     end
 
     it "publishes whisper post to staff users and members of whisperers group" do
@@ -176,6 +208,20 @@ RSpec.describe TopicTrackingState do
       expect(data["topic_id"]).to eq(topic.id)
       expect(data["message_type"]).to eq(described_class::UNREAD_MESSAGE_TYPE)
       expect(data["payload"]["archetype"]).to eq(Archetype.default)
+    end
+
+    it "sends tags as array of objects with id and name" do
+      SiteSetting.tagging_enabled = true
+      tag1 = Fabricate(:tag, name: "urgent")
+      post.topic.tags = [tag1]
+
+      message = MessageBus.track_publish("/unread") { described_class.publish_unread(post) }.first
+
+      tags = message.data["payload"]["tags"]
+      expect(tags).to be_an(Array)
+      expect(tags.length).to eq(1)
+      expect(tags[0]).to match(hash_including("id" => tag1.id, "name" => "urgent"))
+      expect(message.data["payload"]["topic_tag_ids"]).to eq([tag1.id])
     end
 
     it "does not publish unread to the user who created the post" do
@@ -315,12 +361,13 @@ RSpec.describe TopicTrackingState do
     include_examples("does not publish message for private topics", :publish_unmuted)
 
     it "can correctly publish unmuted" do
-      Fabricate(:topic_tag, topic: topic)
+      topic_tag = Fabricate(:topic_tag, topic: topic)
+      topic.reload
       SiteSetting.mute_all_categories_by_default = true
       TopicUser.find_by(topic: topic, user: post.user).update(notification_level: 1)
       CategoryUser.create!(category: topic.category, user: second_user, notification_level: 1)
-      TagUser.create!(tag: topic.tags.first, user: third_user, notification_level: 1)
-      TagUser.create!(tag: topic.tags.first, user: Fabricate(:user), notification_level: 0)
+      TagUser.create!(tag: topic_tag.tag, user: third_user, notification_level: 1)
+      TagUser.create!(tag: topic_tag.tag, user: Fabricate(:user), notification_level: 0)
       messages = MessageBus.track_publish("/latest") { TopicTrackingState.publish_unmuted(topic) }
 
       unmuted_message = messages.find { |message| message.data["message_type"] == "unmuted" }
@@ -683,7 +730,10 @@ RSpec.describe TopicTrackingState do
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)
       row = report[0]
-      expect(row.tags).to contain_exactly("apples", "bananas")
+      expect(row.tags).to be_an(Array)
+      expect(row.tags.length).to eq(2)
+      tag_names = row.tags.map { |t| t["name"] }
+      expect(tag_names).to contain_exactly("apples", "bananas")
     end
   end
 

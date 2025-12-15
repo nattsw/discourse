@@ -99,7 +99,7 @@ class Discourse extends Application {
 
     if (Error.stackTraceLimit) {
       // We need Errors to have full stack traces for `lib/source-identifier`
-      Error.stackTraceLimit = Infinity;
+      Error.stackTraceLimit = 20;
     }
 
     // Our scroll-manager service takes care of storing and restoring scroll position.

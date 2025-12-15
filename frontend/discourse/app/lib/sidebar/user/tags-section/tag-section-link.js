@@ -16,12 +16,12 @@ export default class TagSectionLink extends BaseTagSectionLink {
   @bind
   refreshCounts() {
     this.totalUnread = this.topicTrackingState.countUnread({
-      tagId: this.tagName,
+      tagName: this.tagName,
     });
 
     if (this.totalUnread === 0 || this.#newNewViewEnabled) {
       this.totalNew = this.topicTrackingState.countNew({
-        tagId: this.tagName,
+        tagName: this.tagName,
       });
     }
   }

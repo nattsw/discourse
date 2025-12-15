@@ -48,32 +48,38 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       {
         topic_id: 1,
         last_read_post_number: null,
-        tags: ["foo", "baz"],
+        tags: [
+          { id: 1, name: "foo" },
+          { id: 2, name: "baz" },
+        ],
         created_in_new_period: true,
       },
       {
         topic_id: 2,
         last_read_post_number: null,
-        tags: ["baz"],
+        tags: [{ id: 2, name: "baz" }],
         created_in_new_period: true,
       },
       {
         topic_id: 3,
         last_read_post_number: null,
-        tags: ["random"],
+        tags: [{ id: 3, name: "random" }],
       },
       {
         topic_id: 4,
         last_read_post_number: 1,
         highest_post_number: 7,
-        tags: ["pending"],
+        tags: [{ id: 4, name: "pending" }],
         notification_level: NotificationLevels.TRACKING,
       },
       {
         topic_id: 5,
         last_read_post_number: 1,
         highest_post_number: 7,
-        tags: ["bar", "pending"],
+        tags: [
+          { id: 5, name: "bar" },
+          { id: 4, name: "pending" },
+        ],
         notification_level: NotificationLevels.TRACKING,
       },
       {
@@ -122,32 +128,38 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       {
         topic_id: 1,
         last_read_post_number: null,
-        tags: ["foo", "baz"],
+        tags: [
+          { id: 1, name: "foo" },
+          { id: 2, name: "baz" },
+        ],
         created_in_new_period: true,
       },
       {
         topic_id: 2,
         last_read_post_number: null,
-        tags: ["baz"],
+        tags: [{ id: 2, name: "baz" }],
         created_in_new_period: true,
       },
       {
         topic_id: 3,
         last_read_post_number: null,
-        tags: ["random"],
+        tags: [{ id: 3, name: "random" }],
       },
       {
         topic_id: 4,
         last_read_post_number: 1,
         highest_post_number: 7,
-        tags: ["pending"],
+        tags: [{ id: 4, name: "pending" }],
         notification_level: NotificationLevels.TRACKING,
       },
       {
         topic_id: 5,
         last_read_post_number: 1,
         highest_post_number: 7,
-        tags: ["bar", "pending"],
+        tags: [
+          { id: 5, name: "bar" },
+          { id: 4, name: "pending" },
+        ],
         notification_level: NotificationLevels.TRACKING,
       },
       {
@@ -161,20 +173,23 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
         topic_id: 7,
         last_read_post_number: 7,
         highest_post_number: 7,
-        tags: ["foo", "baz"],
+        tags: [
+          { id: 1, name: "foo" },
+          { id: 2, name: "baz" },
+        ],
       },
       {
         topic_id: 8,
         last_read_post_number: 4,
         highest_post_number: 4,
-        tags: ["pending"],
+        tags: [{ id: 4, name: "pending" }],
         notification_level: NotificationLevels.TRACKING,
       },
       {
         topic_id: 9,
         last_read_post_number: 88,
         highest_post_number: 88,
-        tags: ["pending"],
+        tags: [{ id: 4, name: "pending" }],
         notification_level: NotificationLevels.TRACKING,
       },
     ]);
@@ -206,17 +221,20 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       {
         topic_id: 1,
         last_read_post_number: null,
-        tags: ["foo", "new"],
+        tags: [
+          { id: 1, name: "foo" },
+          { id: 6, name: "new" },
+        ],
       },
       {
         topic_id: 2,
         last_read_post_number: null,
-        tags: ["new"],
+        tags: [{ id: 6, name: "new" }],
       },
       {
         topic_id: 3,
         last_read_post_number: null,
-        tags: ["random"],
+        tags: [{ id: 3, name: "random" }],
         created_in_new_period: true,
       },
       {
@@ -224,14 +242,17 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
         last_read_post_number: 1,
         highest_post_number: 7,
         category_id: 7,
-        tags: ["bug"],
+        tags: [{ id: 7, name: "bug" }],
         notification_level: NotificationLevels.TRACKING,
       },
       {
         topic_id: 5,
         last_read_post_number: 1,
         highest_post_number: 7,
-        tags: ["bar", "bug"],
+        tags: [
+          { id: 5, name: "bar" },
+          { id: 7, name: "bug" },
+        ],
         category_id: 7,
         notification_level: NotificationLevels.TRACKING,
       },
@@ -259,7 +280,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
         }
       }
 
-      if (topic.tags?.includes("random")) {
+      if (topic.tags?.some((tag) => tag.name === "random")) {
         if (isNew) {
           randomNew += 1;
         }
@@ -442,7 +463,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
           unread_posts: 0,
           highest_post_number: 20,
           category_id: 1,
-          tags: ["pending"],
+          tags: [{ id: 4, name: "pending" }],
         }),
         this.store.createRecord("topic", {
           id: 222,
@@ -465,7 +486,11 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     );
     assert.propEqual(
       getProperties(state111, "highest_post_number", "tags", "category_id"),
-      { highest_post_number: 20, tags: ["pending"], category_id: 1 },
+      {
+        highest_post_number: 20,
+        tags: [{ id: 4, name: "pending" }],
+        category_id: 1,
+      },
       "highest_post_number, category, and tags are set for a topic"
     );
     assert.strictEqual(
@@ -793,7 +818,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       0
     );
     assert.strictEqual(
-      trackingState.countNew({ categoryId: 1, tagId: "missing-tag" }),
+      trackingState.countNew({ categoryId: 1, tagName: "missing-tag" }),
       0
     );
     assert.strictEqual(trackingState.countNew({ categoryId: 2 }), 1);
@@ -804,7 +829,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       id: 113,
       notification_level: NotificationLevels.TRACKING,
       category_id: 3,
-      tags: ["amazing"],
+      tags: [{ id: 8, name: "amazing" }],
       created_in_new_period: true,
     });
 
@@ -814,14 +839,14 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     assert.strictEqual(
       trackingState.countNew({
         categoryId: 3,
-        tagId: "amazing",
+        tagName: "amazing",
       }),
       1
     );
     assert.strictEqual(
       trackingState.countNew({
         categoryId: 3,
-        tagId: "missing",
+        tagName: "missing",
       }),
       0
     );
@@ -889,7 +914,7 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
     payload: {
       category_id: 123,
       topic_tag_ids: [44],
-      tags: ["pending"],
+      tags: [{ id: 4, name: "pending" }],
       highest_post_number: 10,
       created_at: "2012-11-31 12:00:00 UTC",
       archetype: "regular",
@@ -946,7 +971,7 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
         topic_id: 111,
         category_id: 123,
         topic_tag_ids: [44],
-        tags: ["pending"],
+        tags: [{ id: 4, name: "pending" }],
         last_read_post_number: 4,
         highest_post_number: 10,
         notification_level: NotificationLevels.TRACKING,
@@ -1043,7 +1068,7 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
       {
         category_id: 123,
         topic_tag_ids: [44],
-        tags: ["pending"],
+        tags: [{ id: 4, name: "pending" }],
         last_read_post_number: 9,
         highest_post_number: 10,
         notification_level: NotificationLevels.TRACKING,
@@ -1082,7 +1107,7 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
         notification_level: NotificationLevels.TRACKING,
         category_id: 1,
         is_seen: false,
-        tags: ["foo"],
+        tags: [{ id: 1, name: "foo" }],
       },
     ]);
 
@@ -1102,7 +1127,7 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
         notification_level: NotificationLevels.TRACKING,
         category_id: 1,
         is_seen: false,
-        tags: ["foo"],
+        tags: [{ id: 1, name: "foo" }],
       },
     ]);
     await publishToMessageBus(`/unread/${this.currentUser.id}`, {
@@ -1126,7 +1151,7 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
     );
     assert.deepEqual(
       this.trackingState.findState(112).tags,
-      ["foo"],
+      [{ id: 1, name: "foo" }],
       "tags are not accidentally cleared"
     );
   });
@@ -1141,7 +1166,7 @@ module("Unit | Model | topic-tracking-state | /new", function (hooks) {
     payload: {
       category_id: 123,
       topic_tag_ids: [44],
-      tags: ["pending"],
+      tags: [{ id: 4, name: "pending" }],
       last_read_post_number: null,
       highest_post_number: 1,
       created_at: "2012-11-31 12:00:00 UTC",
@@ -1208,7 +1233,7 @@ module("Unit | Model | topic-tracking-state | /new", function (hooks) {
       {
         category_id: 123,
         topic_tag_ids: [44],
-        tags: ["pending"],
+        tags: [{ id: 4, name: "pending" }],
         last_read_post_number: null,
         highest_post_number: 1,
         created_at: "2012-11-31 12:00:00 UTC",
@@ -1252,7 +1277,7 @@ module("Unit | Model | topic-tracking-state | /new", function (hooks) {
       {
         category_id: 123,
         topic_tag_ids: [44],
-        tags: ["pending"],
+        tags: [{ id: 4, name: "pending" }],
         last_read_post_number: null,
         highest_post_number: 1,
         created_at: "2012-11-31 12:00:00 UTC",

@@ -100,8 +100,13 @@ RSpec.describe PostRevisionSerializer do
           root: false,
         ).as_json
 
+      # previous comes from stored revision (string format)
       expect(json[:tags_changes][:previous]).to contain_exactly(public_tag.name, hidden_tag.name)
-      expect(json[:tags_changes][:current]).to contain_exactly(public_tag2.name, hidden_tag.name)
+      # current comes from topic.tags (object format)
+      expect(json[:tags_changes][:current]).to contain_exactly(
+        { "id" => public_tag2.id, "name" => public_tag2.name },
+        { "id" => hidden_tag.id, "name" => hidden_tag.name },
+      )
     end
 
     it "does not return hidden tags to non-staff" do
@@ -112,8 +117,12 @@ RSpec.describe PostRevisionSerializer do
           root: false,
         ).as_json
 
+      # previous comes from stored revision (string format)
       expect(json[:tags_changes][:previous]).to contain_exactly(public_tag.name)
-      expect(json[:tags_changes][:current]).to contain_exactly(public_tag2.name)
+      # current comes from topic.tags (object format)
+      expect(json[:tags_changes][:current]).to contain_exactly(
+        { "id" => public_tag2.id, "name" => public_tag2.name },
+      )
     end
 
     it "does not show tag modifications if changes are not visible to the user" do

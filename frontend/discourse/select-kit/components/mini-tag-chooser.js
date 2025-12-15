@@ -1,4 +1,4 @@
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { empty, or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import {
@@ -34,21 +34,41 @@ import TagRow from "./tag-row";
   maximum: "maxTagsPerTopic",
   autoInsertNoneItem: false,
   useHeaderFilter: false,
-  valueProperty: "name",
+  valueProperty: "id",
   nameProperty: "name",
 })
 @pluginApiIdentifiers(["mini-tag-chooser"])
 export default class MiniTagChooser extends MultiSelectComponent {
   @service tagUtils;
 
-  valueProperty = "name";
+  valueProperty = "id";
   nameProperty = "name";
 
-  @empty("value") noTags;
   @or("allowCreate", "site.can_create_tag") allowAnyTag;
 
+  // tags holds the full tag objects passed via @value
+  @empty("value") noTags;
+
   @setting("max_tag_search_results") maxTagSearchResults;
+
   @setting("max_tags_per_topic") maxTagsPerTopic;
+
+  // we use a separate property name to avoid conflicts with the parent's value getter
+  @computed("tags.[]")
+  get value() {
+    return makeArray(this.tags).map((t) => t.id);
+  }
+
+  @action
+  _onChange(value, items) {
+    if (this.onChange) {
+      // pass tag objects to onChange
+      this.onChange(items);
+    } else {
+      // store tag objects directly if no onChange handler provided
+      this.set("tags", items);
+    }
+  }
 
   modifyComponentForRow(collection, item) {
     if (this.getValue(item) === this.selectKit.filter && !item.count) {
@@ -79,15 +99,17 @@ export default class MiniTagChooser extends MultiSelectComponent {
       : "plus";
   }
 
-  @computed("value.[]")
+  @computed("tags.[]")
   get content() {
-    let values = makeArray(this.value);
+    let values = makeArray(this.tags);
+
     if (this.selectKit.options.hiddenValues) {
       values = values.filter(
-        (val) => !this.selectKit.options.hiddenValues.includes(val)
+        (val) => !this.selectKit.options.hiddenValues.includes(val.name)
       );
     }
-    return values.map((x) => this.defaultItem(x, x));
+
+    return values;
   }
 
   validateCreate(filter, content) {
@@ -120,8 +142,9 @@ export default class MiniTagChooser extends MultiSelectComponent {
       categoryId: this.selectKit.options.categoryId,
     };
 
-    if (this.value) {
-      data.selected_tags = this.value.slice(0, 100);
+    if (this.tags) {
+      const selectedTags = makeArray(this.tags).map((tag) => tag.name);
+      data.selected_tags = selectedTags.slice(0, 100);
     }
 
     if (!this.selectKit.options.everyTag) {
@@ -164,6 +187,7 @@ export default class MiniTagChooser extends MultiSelectComponent {
       this.set("selectKit.options.translatedFilterPlaceholder", null);
     }
 
-    return results.filter((r) => !makeArray(this.tags).includes(r.name));
+    const selectedTagNames = makeArray(this.tags).map((tag) => tag.name);
+    return results.filter((r) => !selectedTagNames.includes(r.name));
   }
 }

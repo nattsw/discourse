@@ -364,12 +364,13 @@ RSpec.describe TagUser do
         SiteSetting.default_tags_watching_first_post = tag3.name
         SiteSetting.default_tags_muted = tag4.name
       end
-      it "every tag from the default_tags_* site settings get overridden to watching_first_post, except for muted" do
+      it "every tag from the default_tags_* site settings get overridden to regular, except for muted" do
         levels = TagUser.notification_levels_for(user)
-        expect(levels[tag1.name]).to eq(TagUser.notification_levels[:regular])
-        expect(levels[tag2.name]).to eq(TagUser.notification_levels[:regular])
-        expect(levels[tag3.name]).to eq(TagUser.notification_levels[:regular])
-        expect(levels[tag4.name]).to eq(TagUser.notification_levels[:muted])
+        level_for = ->(tag) { levels.find { |l| l[:name] == tag.name }&.dig(:level) }
+        expect(level_for.call(tag1)).to eq(TagUser.notification_levels[:regular])
+        expect(level_for.call(tag2)).to eq(TagUser.notification_levels[:regular])
+        expect(level_for.call(tag3)).to eq(TagUser.notification_levels[:regular])
+        expect(level_for.call(tag4)).to eq(TagUser.notification_levels[:muted])
       end
     end
 
@@ -402,20 +403,20 @@ RSpec.describe TagUser do
       include tags the user is not tracking at all" do
         tag5 = Fabricate(:tag)
         levels = TagUser.notification_levels_for(user)
-        expect(levels[tag1.name]).to eq(TagUser.notification_levels[:watching])
-        expect(levels[tag2.name]).to eq(TagUser.notification_levels[:tracking])
-        expect(levels[tag3.name]).to eq(TagUser.notification_levels[:watching_first_post])
-        expect(levels[tag4.name]).to eq(TagUser.notification_levels[:muted])
-        expect(levels.key?(tag5.name)).to eq(false)
+        level_for = ->(tag) { levels.find { |l| l[:name] == tag.name }&.dig(:level) }
+        expect(level_for.call(tag1)).to eq(TagUser.notification_levels[:watching])
+        expect(level_for.call(tag2)).to eq(TagUser.notification_levels[:tracking])
+        expect(level_for.call(tag3)).to eq(TagUser.notification_levels[:watching_first_post])
+        expect(level_for.call(tag4)).to eq(TagUser.notification_levels[:muted])
+        expect(level_for.call(tag5)).to be_nil
       end
 
       it "does not show a tag is tracked if the user does not belong to the tag group with permissions" do
         group = Fabricate(:group)
         tag_group = Fabricate(:tag_group, tags: [tag2], permissions: { group.name => 1 })
 
-        expect(TagUser.notification_levels_for(user).keys).to match_array(
-          [tag1.name, tag3.name, tag4.name],
-        )
+        levels = TagUser.notification_levels_for(user)
+        expect(levels.map { |l| l[:name] }).to match_array([tag1.name, tag3.name, tag4.name])
       end
     end
   end

@@ -16,6 +16,54 @@ module DiscourseTagging
     @term_types ||= Enum.new(contains: 0, starts_with: 1)
   end
 
+  # normalizes tag input to return existing tag IDs and new tag names
+  # supports both string arrays ["tag1", "tag2"] and object arrays [{id: 1, name: "tag1"}]
+  # also handles jQuery-serialized arrays which Rails parses as {"0" => {...}, "1" => {...}}
+  def self.normalize_tag_input(tags_arg)
+    return { existing_ids: [], new_names: [] } if tags_arg.blank?
+
+    # handle jQuery-serialized arrays: Rails parses tags[0][id]=1&tags[1][id]=2 as {"0" => {...}, "1" => {...}}
+    if tags_arg.is_a?(ActionController::Parameters) || tags_arg.is_a?(Hash)
+      tags_arg = tags_arg.to_unsafe_h if tags_arg.is_a?(ActionController::Parameters)
+      if tags_arg.keys.all? { |k| k.to_s =~ /\A\d+\z/ }
+        # convert hash with numeric keys to array of values sorted by key
+        tags_array = tags_arg.sort_by { |k, _| k.to_i }.map(&:last)
+      else
+        tags_array = [tags_arg]
+      end
+    else
+      tags_array = Array(tags_arg)
+    end
+
+    return { existing_ids: [], new_names: [] } if tags_array.empty?
+
+    first = tags_array.first
+    is_objects = first.is_a?(Hash) || first.is_a?(ActionController::Parameters)
+
+    if is_objects
+      existing_ids = []
+      new_names = []
+
+      tags_array.each do |tag|
+        tag = tag.to_unsafe_h.with_indifferent_access if tag.is_a?(ActionController::Parameters)
+        id = tag[:id] || tag["id"]
+        name = tag[:name] || tag["name"]
+
+        if id.present? && id.to_s != name.to_s
+          # tag has a real ID (not a string-based ID from new tags)
+          existing_ids << id.to_i
+        elsif name.present?
+          new_names << name.to_s
+        end
+      end
+
+      { existing_ids: existing_ids.uniq, new_names: new_names.uniq }
+    else
+      # legacy string array format - all are treated as names
+      { existing_ids: [], new_names: tags_array.map(&:to_s).uniq }
+    end
+  end
+
   def self.tag_topic_by_names(topic, guardian, tag_names_arg, append: false)
     if guardian.can_tag?(topic)
       tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, guardian) || []
@@ -219,8 +267,20 @@ module DiscourseTagging
   end
 
   def self.validate_category_tags(guardian, model, category, tags = [])
-    existing_tags = tags.present? ? Tag.where(name: tags) : []
-    valid_tags = guardian.can_create_tag? ? tags : existing_tags
+    # normalize tag input to handle both string arrays and object arrays
+    normalized = normalize_tag_input(tags)
+    tag_names = []
+
+    # get names from existing tags by ID
+    if normalized[:existing_ids].present?
+      tag_names += Tag.where(id: normalized[:existing_ids]).pluck(:name)
+    end
+
+    # add names from new tags
+    tag_names += normalized[:new_names] if normalized[:new_names].present?
+
+    existing_tags = tag_names.present? ? Tag.where_name(tag_names) : []
+    valid_tags = guardian.can_create_tag? ? tag_names : existing_tags
 
     # all add to model (topic) errors
     valid = validate_min_required_tags_for_category(guardian, model, category, valid_tags)
@@ -729,13 +789,31 @@ module DiscourseTagging
   def self.tags_for_saving(tags_arg, guardian, opts = {})
     return [] unless guardian.can_tag_topics? && tags_arg.present?
 
-    tag_names = Tag.where_name(tags_arg).pluck(:name)
+    normalized = normalize_tag_input(tags_arg)
+    tag_names = []
 
-    if guardian.can_create_tag?
-      tag_names += (tags_arg - tag_names).map { |t| clean_tag(t) }
-      tag_names.delete_if { |t| t.blank? }
-      tag_names.uniq!
+    # look up existing tags by ID
+    if normalized[:existing_ids].present?
+      tag_names += Tag.where(id: normalized[:existing_ids]).pluck(:name)
     end
+
+    # look up existing tags by name
+    if normalized[:new_names].present?
+      existing_by_name = Tag.where_name(normalized[:new_names]).pluck(:name)
+      tag_names += existing_by_name
+
+      # allow creating new tags if user has permission
+      if guardian.can_create_tag?
+        new_tags =
+          normalized[:new_names].reject do |n|
+            existing_by_name.map(&:downcase).include?(n.downcase)
+          end
+        tag_names += new_tags.map { |t| clean_tag(t) }
+      end
+    end
+
+    tag_names.delete_if { |t| t.blank? }
+    tag_names.uniq!
 
     saving_tags = opts[:unlimited] ? tag_names : tag_names[0...SiteSetting.max_tags_per_topic]
     DiscoursePluginRegistry.apply_modifier(:tags_for_saving, saving_tags, tag_names, guardian, opts)

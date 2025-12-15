@@ -88,6 +88,7 @@ class PostRevisor
       tc.record_change("category_id", current_category.id, nil)
       tc.topic.category_id = nil
     elsif new_category.nil? || tc.guardian.can_move_topic_to_category?(new_category_id)
+      # this needs to just be tags instead of tag names
       tags = fields[:tags] || tc.topic.tags.map(&:name)
       if new_category &&
            !DiscourseTagging.validate_category_tags(tc.guardian, tc.topic, new_category, tags)

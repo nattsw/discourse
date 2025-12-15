@@ -273,7 +273,7 @@ export default class ComposerContainer extends Component {
                       {{#if this.composer.canEditTags}}
                         <div class="tags-input">
                           <MiniTagChooser
-                            @value={{this.composer.model.tags}}
+                            @tags={{this.composer.model.tags}}
                             @onChange={{fn (mut this.composer.model.tags)}}
                             @options={{hash
                               disabled=this.composer.disableTagsChooser

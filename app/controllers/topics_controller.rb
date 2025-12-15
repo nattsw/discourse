@@ -449,7 +449,23 @@ class TopicsController < ApplicationController
 
     if Tag.include_tags?
       topic_tags = topic.tags.map(&:name).sort
-      changes.delete(:tags) if changes[:tags]&.sort == topic_tags
+      # extract tag names from changes[:tags] for comparison
+      # changes[:tags] could be string names or tag objects from jQuery serialization
+      changes_tags = changes[:tags]
+      if changes_tags.present?
+        changes_tag_names =
+          if changes_tags.is_a?(ActionController::Parameters) || changes_tags.is_a?(Hash)
+            changes_tags.to_unsafe_h.values.map do |t|
+              t["name"] || t[:name] || t["text"] || t[:text]
+            end
+          elsif changes_tags.first.is_a?(Hash) ||
+                changes_tags.first.is_a?(ActionController::Parameters)
+            changes_tags.map { |t| t["name"] || t[:name] || t["text"] || t[:text] }
+          else
+            changes_tags.map(&:to_s)
+          end
+        changes.delete(:tags) if changes_tag_names.sort == topic_tags
+      end
     end
 
     success = true

@@ -217,32 +217,45 @@ class TagUser < ActiveRecord::Base
     )
   end
 
+  # TODO NAT: this is only used by `user_tag_notifications_mixin`, can be simplified
   def self.notification_levels_for(user)
     # Anonymous users have all default tags set to regular tracking,
     # except for default muted tags which stay muted.
     if user.blank?
+      tag_names = [
+        SiteSetting.default_tags_watching_first_post.split("|"),
+        SiteSetting.default_tags_watching.split("|"),
+        SiteSetting.default_tags_tracking.split("|"),
+      ].flatten
+
+      muted_tag_names = SiteSetting.default_tags_muted.split("|")
+
+      tags_by_name =
+        Tag
+          .where(name: tag_names + muted_tag_names)
+          .pluck(:id, :name)
+          .to_h { |id, name| [name, id] }
+
       notification_levels =
-        [
-          SiteSetting.default_tags_watching_first_post.split("|"),
-          SiteSetting.default_tags_watching.split("|"),
-          SiteSetting.default_tags_tracking.split("|"),
-        ].flatten.map { |name| [name, self.notification_levels[:regular]] }
+        tag_names.map do |name|
+          { id: tags_by_name[name], name: name, level: self.notification_levels[:regular] }
+        end
 
       notification_levels +=
-        SiteSetting
-          .default_tags_muted
-          .split("|")
-          .map { |name| [name, self.notification_levels[:muted]] }
+        muted_tag_names.map do |name|
+          { id: tags_by_name[name], name: name, level: self.notification_levels[:muted] }
+        end
     else
       notification_levels =
         TagUser
           .notification_level_visible
           .where(user: user)
-          .joins(:tag)
-          .pluck("tags.name", :notification_level)
+          .joins(:tag) # TODO NAT: can we avoid the whole pluck and map here
+          .pluck("tags.id", "tags.name", :notification_level)
+          .map { |id, name, level| { id: id, name: name, level: level } }
     end
 
-    Hash[*notification_levels.flatten]
+    notification_levels
   end
 end
 

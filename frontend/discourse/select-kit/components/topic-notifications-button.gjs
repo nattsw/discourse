@@ -83,7 +83,17 @@ export default class TopicNotificationsButton extends Component {
     } else if (!isEmpty(this.args.topic.tags)) {
       if (level === 3 && reason === 10) {
         // 3_10 watching tag
-        return !this.args.topic.tags.some((tag) => watchedTags.includes(tag));
+        return !this.args.topic.tags.some((tag) => {
+          if (typeof tag === "string") {
+            // print the stack trace here so we know who is violating
+            console.warn(
+              `Topic tag is a string (${tag}) - this will be deprecated soon. Please pass tag objects instead.`
+            );
+            console.warn(new Error().stack);
+          }
+          const tagName = typeof tag === "string" ? tag : tag.name;
+          return watchedTags.includes(tagName);
+        });
       }
     }
 

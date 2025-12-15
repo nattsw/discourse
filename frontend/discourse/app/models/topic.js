@@ -452,7 +452,15 @@ export default class Topic extends RestModel {
     const newTags = [];
 
     tags.forEach(function (tag) {
-      if (!title.includes(tag.toLowerCase())) {
+      if (typeof tag === "string") {
+        // print the stack trace here so we know who is violating
+        console.warn(
+          `Topic tag is a string (${tag}) - this will be deprecated soon. Please pass tag objects instead.`
+        );
+        console.warn(new Error().stack);
+      }
+      const tagName = typeof tag === "string" ? tag : tag.name;
+      if (!title.includes(tagName.toLowerCase())) {
         newTags.push(tag);
       }
     });

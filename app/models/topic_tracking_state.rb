@@ -42,8 +42,8 @@ class TopicTrackingState
   def self.publish_new(topic)
     return unless topic.regular?
 
-    tag_ids, tags = nil
-    tag_ids, tags = topic.tags.pluck(:id, :name).transpose if include_tags_in_report?
+    tags = nil
+    tags = topic.tags.map { |tag| { id: tag.id, name: tag.name } } if include_tags_in_report?
 
     payload = {
       last_read_post_number: nil,
@@ -56,7 +56,7 @@ class TopicTrackingState
 
     if tags
       payload[:tags] = tags
-      payload[:topic_tag_ids] = tag_ids
+      payload[:topic_tag_ids] = tags.map { |t| t[:id] }
     end
 
     message = { topic_id: topic.id, message_type: NEW_TOPIC_MESSAGE_TYPE, payload: payload }
@@ -70,8 +70,8 @@ class TopicTrackingState
   def self.publish_latest(topic, whisper = false)
     return unless topic.regular?
 
-    tag_ids, tags = nil
-    tag_ids, tags = topic.tags.pluck(:id, :name).transpose if include_tags_in_report?
+    tags = nil
+    tags = topic.tags.map { |tag| { id: tag.id, name: tag.name } } if include_tags_in_report?
 
     message = {
       topic_id: topic.id,
@@ -85,7 +85,7 @@ class TopicTrackingState
 
     if tags
       message[:payload][:tags] = tags
-      message[:payload][:topic_tag_ids] = tag_ids
+      message[:payload][:topic_tag_ids] = tags.map { |t| t[:id] }
     end
 
     group_ids =
@@ -142,8 +142,7 @@ class TopicTrackingState
     # TODO at high scale we are going to have to defer this,
     #   perhaps cut down to users that are around in the last 7 days as well
     tags = nil
-    tag_ids = nil
-    tag_ids, tags = post.topic.tags.pluck(:id, :name).transpose if include_tags_in_report?
+    tags = post.topic.tags.map { |tag| { id: tag.id, name: tag.name } } if include_tags_in_report?
 
     # We don't need to publish unread to the person who just made the post,
     # this is why they are excluded from the initial scope.
@@ -178,7 +177,7 @@ class TopicTrackingState
 
     if tags
       payload[:tags] = tags
-      payload[:topic_tag_ids] = tag_ids
+      payload[:topic_tag_ids] = tags.map { |t| t[:id] }
     end
 
     message = { topic_id: post.topic_id, message_type: UNREAD_MESSAGE_TYPE, payload: payload }
@@ -344,7 +343,7 @@ class TopicTrackingState
           #{sql}
         )
         SELECT *, (
-          SELECT ARRAY_AGG(name) from topic_tags
+          SELECT ARRAY_AGG(json_build_object('id', tags.id, 'name', tags.name)) from topic_tags
              JOIN tags on tags.id = topic_tags.tag_id
              WHERE topic_id = tags_included_cte.topic_id
           ) tags

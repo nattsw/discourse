@@ -289,7 +289,7 @@ export default class TagInfo extends Component {
             </div>
           {{else}}
             <div class="tag-name-wrapper">
-              {{discourseTag this.tagInfo.name tagName="div"}}
+              {{discourseTag this.tagInfo tagName="div"}}
               {{#if this.canEditTags}}
                 <a
                   href
@@ -339,7 +339,7 @@ export default class TagInfo extends Component {
             <div class="tag-list">
               {{#each this.tagInfo.synonyms as |tag|}}
                 <div class="tag-box">
-                  {{discourseTag tag.name pmOnly=tag.pmOnly tagName="div"}}
+                  {{discourseTag tag pmOnly=tag.pmOnly tagName="div"}}
                   {{#if this.editSynonymsMode}}
                     <a
                       href

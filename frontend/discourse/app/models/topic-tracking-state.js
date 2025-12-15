@@ -37,15 +37,54 @@ function isUnseen(topic) {
   return !topic.is_seen;
 }
 
+// helper to check if a tags array contains a given tag name
+// supports both string and {id, name} object formats
+function hasTagName(tags, tagName) {
+  if (!tags || !tagName) {
+    return false;
+  }
+  return tags.some((tag) => {
+    if (typeof tag === "string") {
+      // print the trace here so we know who is violating
+      console.warn(
+        `Topic tag is a string (${tag}) - this will be deprecated soon. Please pass tag objects instead.`
+      );
+      console.warn(new Error().stack);
+    }
+    const name = typeof tag === "string" ? tag : tag.name;
+    return name === tagName;
+  });
+}
+
 function hasMutedTags(topicTags, mutedTags, siteSettings) {
   if (!mutedTags || !topicTags) {
     return false;
   }
   return (
     (siteSettings.remove_muted_tags_from_latest === "always" &&
-      topicTags.some((topicTag) => mutedTags.includes(topicTag))) ||
+      topicTags.some((topicTag) => {
+        if (typeof topicTag === "string") {
+          // print the trace here so we know who is violating
+          console.warn(
+            `Topic tag is a string (${topicTag}) - this will be deprecated soon. Please pass tag objects instead.`
+          );
+          console.warn(new Error().stack);
+        }
+        const tagName = typeof topicTag === "string" ? topicTag : topicTag.name;
+        return mutedTags.includes(tagName);
+      })) ||
     (siteSettings.remove_muted_tags_from_latest === "only_muted" &&
-      topicTags.every((topicTag) => mutedTags.includes(topicTag)))
+      topicTags.every((topicTag) => {
+        if (typeof topicTag === "string") {
+          // print the trace here so we know who is violating
+          console.warn(
+            `Topic tag is a string (${topicTag}) - this will be deprecated soon. Please pass tag objects instead.`
+          );
+          console.warn(new Error().stack);
+        }
+        const tagName = typeof topicTag === "string" ? topicTag : topicTag.name;
+        return mutedTags.includes(tagName);
+      }))
   );
 }
 
@@ -279,7 +318,7 @@ export default class TopicTrackingState extends EmberObject {
       }
     }
 
-    if (filterTag && !data.payload.tags?.includes(filterTag)) {
+    if (filterTag && !hasTagName(data.payload.tags, filterTag)) {
       return;
     }
 
@@ -559,7 +598,7 @@ export default class TopicTrackingState extends EmberObject {
   countCategoryByState({
     type,
     categoryId,
-    tagId,
+    tagName,
     noSubcategories,
     customFilterFn,
   }) {
@@ -604,7 +643,7 @@ export default class TopicTrackingState extends EmberObject {
         return false;
       }
 
-      if (tagId && !topic.tags?.includes(tagId)) {
+      if (tagName && !hasTagName(topic.tags, tagName)) {
         return false;
       }
 
@@ -620,21 +659,21 @@ export default class TopicTrackingState extends EmberObject {
     }).length;
   }
 
-  countNew({ categoryId, tagId, noSubcategories, customFilterFn } = {}) {
+  countNew({ categoryId, tagName, noSubcategories, customFilterFn } = {}) {
     return this.countCategoryByState({
       type: "new",
       categoryId,
-      tagId,
+      tagName,
       noSubcategories,
       customFilterFn,
     });
   }
 
-  countUnread({ categoryId, tagId, noSubcategories, customFilterFn } = {}) {
+  countUnread({ categoryId, tagName, noSubcategories, customFilterFn } = {}) {
     return this.countCategoryByState({
       type: "unread",
       categoryId,
-      tagId,
+      tagName,
       noSubcategories,
       customFilterFn,
     });
@@ -642,14 +681,14 @@ export default class TopicTrackingState extends EmberObject {
 
   countNewAndUnread({
     categoryId,
-    tagId,
+    tagName,
     noSubcategories,
     customFilterFn,
   } = {}) {
     return this.countCategoryByState({
       type: "new_and_unread",
       categoryId,
-      tagId,
+      tagName,
       noSubcategories,
       customFilterFn,
     });
@@ -703,7 +742,7 @@ export default class TopicTrackingState extends EmberObject {
       (topic, newTopic, unreadTopic) => {
         if (topic.tags && topic.tags.length > 0) {
           tags.forEach((tag) => {
-            if (topic.tags.includes(tag)) {
+            if (hasTagName(topic.tags, tag)) {
               if (unreadTopic) {
                 counts[tag].unreadCount++;
               }
@@ -730,7 +769,7 @@ export default class TopicTrackingState extends EmberObject {
       if (
         topic.category_id === category_id &&
         !topic.deleted &&
-        (!tagId || topic.tags?.includes(tagId))
+        (!tagId || hasTagName(topic.tags, tagId))
       ) {
         sum +=
           topic.last_read_post_number === null ||

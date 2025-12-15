@@ -201,7 +201,7 @@ import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 
 <template>
   <MiniTagChooser
-    @value={{@dummy.selectedTags}}
+    @tags={{@dummy.selectedTags}}
     @options={{hash filterable=true}}
   />
 </template>
@@ -215,7 +215,7 @@ import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 
 <template>
   <MiniTagChooser
-    @value={{@dummy.selectedTags}}
+    @tags={{@dummy.selectedTags}}
     @options={{hash
       filterable=true
       filterPlaceholder="tagging.choose_for_topic"
@@ -423,7 +423,7 @@ import IconPicker from "discourse/select-kit/components/icon-picker";
     >
       <div class="inline-form">
         <MiniTagChooser
-          @value={{@dummy.selectedTags}}
+          @tags={{@dummy.selectedTags}}
           @options={{hash filterable=true}}
         />
       </div>
@@ -435,7 +435,7 @@ import IconPicker from "discourse/select-kit/components/icon-picker";
     >
       <div class="inline-form">
         <MiniTagChooser
-          @value={{@dummy.selectedTags}}
+          @tags={{@dummy.selectedTags}}
           @options={{hash
             filterable=true
             filterPlaceholder="tagging.choose_for_topic"

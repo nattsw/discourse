@@ -60,7 +60,17 @@ export default class Item extends Component {
   }
 
   get tagClassNames() {
-    return this.args.topic.tags?.map((tagName) => `tag-${tagName}`);
+    return this.args.topic.tags?.map((tag) => {
+      if (typeof tag === "string") {
+        // print the trace here so we know who is violating
+        console.warn(
+          `Topic tag is a string (${tag}) - this will be deprecated soon. Please pass tag objects instead.`
+        );
+        console.warn(new Error().stack);
+      }
+      const tagName = typeof tag === "string" ? tag : tag.name;
+      return `tag-${tagName}`;
+    });
   }
 
   get expandPinned() {

@@ -20,13 +20,13 @@ import TagChooserRow from "./tag-chooser-row";
   limit: null,
   allowAny: "canCreateTag",
   maximum: "maximumTagCount",
-  valueProperty: "name",
+  valueProperty: "id",
 })
 @pluginApiIdentifiers("tag-chooser")
 export default class TagChooser extends MultiSelectComponent {
   @service tagUtils;
 
-  valueProperty = "name";
+  valueProperty = "id";
   nameProperty = "name";
 
   blockedTags = null;
@@ -72,14 +72,12 @@ export default class TagChooser extends MultiSelectComponent {
 
   @computed("tags.[]")
   get value() {
-    return uniqueItemsFromArray(makeArray(this.tags));
+    return uniqueItemsFromArray(makeArray(this.tags)).map((t) => t.id);
   }
 
   @computed("tags.[]")
   get content() {
-    return uniqueItemsFromArray(makeArray(this.tags)).map((t) =>
-      this.defaultItem(t, t)
-    );
+    return uniqueItemsFromArray(makeArray(this.tags));
   }
 
   @action
@@ -87,7 +85,8 @@ export default class TagChooser extends MultiSelectComponent {
     if (this.onChange) {
       this.onChange(value, items);
     } else {
-      this.set("tags", value);
+      // store tag objects, not just IDs
+      this.set("tags", items);
     }
   }
 
@@ -108,17 +107,19 @@ export default class TagChooser extends MultiSelectComponent {
   }
 
   search(query) {
-    const selectedTags = makeArray(this.tags).filter(Boolean);
-
     const data = {
       q: query,
       limit: this.siteSettings.max_tag_search_results,
       categoryId: this.categoryId,
     };
 
-    if (selectedTags.length || this.blockedTags.length) {
+    const selectedTagNames = makeArray(this.tags)
+      .filter(Boolean)
+      .map((t) => t.name);
+
+    if (selectedTagNames.length || this.blockedTags.length) {
       data.selected_tags = uniqueItemsFromArray(
-        selectedTags.concat(this.blockedTags)
+        selectedTagNames.concat(this.blockedTags)
       ).slice(0, 100);
     }
 

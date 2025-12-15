@@ -19,14 +19,14 @@ export default class SelectedCollection extends Component {
 
     let tags = this.selectedTags;
     if (tags.length >= 20 && this.selectKit.filter) {
-      tags = tags.filter((t) => t.includes(this.selectKit.filter));
+      tags = tags.filter((t) => t.name.includes(this.selectKit.filter));
     } else if (tags.length >= 20) {
       tags = tags.slice(0, 20);
     }
 
     return tags.map((selectedTag) => {
       return {
-        value: selectedTag,
+        tag: selectedTag,
         classNames: "selected-tag",
       };
     });
@@ -37,13 +37,13 @@ export default class SelectedCollection extends Component {
       <div class="mini-tag-chooser-selected-collection selected-tags">
         {{#each this.tags as |tag|}}
           <DButton
-            @translatedTitle={{tag.value}}
+            @translatedTitle={{tag.tag.name}}
             @icon="xmark"
-            @action={{fn this.selectKit.deselect tag.value}}
+            @action={{fn this.selectKit.deselect tag.tag.id}}
             tabindex="0"
             class={{tag.classNames}}
           >
-            {{discourseTag tag.value noHref=true}}
+            {{discourseTag tag.tag noHref=true}}
           </DButton>
         {{/each}}
       </div>

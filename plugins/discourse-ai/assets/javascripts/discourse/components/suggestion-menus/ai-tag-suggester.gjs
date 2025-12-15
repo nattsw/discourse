@@ -203,7 +203,7 @@ export default class AiTagSuggester extends Component {
                     @action={{fn this.applySuggestion suggestion}}
                   >
                     {{discourseTag
-                      suggestion.name
+                      suggestion
                       count=suggestion.count
                       noHref=true
                     }}
