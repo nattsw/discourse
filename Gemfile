@@ -54,7 +54,7 @@ gem "http_accept_language", require: false
 gem "discourse-fonts", require: "discourse_fonts"
 gem "discourse-emojis", require: "discourse_emojis"
 
-gem "message_bus"
+gem "message_bus", ">= 4.5.0"
 
 gem "rails_multisite"
 
@@ -76,13 +76,13 @@ gem "loofah"
 gem "css_parser", require: false
 
 gem "omniauth"
-gem "omniauth-facebook"
+gem "omniauth-facebook", ">= 10.0.0"
 gem "omniauth-twitter"
-gem "omniauth-github"
+gem "omniauth-github", ">= 2.0.1"
 
-gem "omniauth-oauth2", require: false
+gem "omniauth-oauth2", ">= 1.8.0", require: false
 
-gem "omniauth-google-oauth2"
+gem "omniauth-google-oauth2", ">= 1.1.0"
 
 gem "oj"
 
@@ -126,7 +126,7 @@ group :test do
   gem "test-prof"
   gem "rails-dom-testing", require: false
   gem "minio_runner", require: false
-  gem "capybara-playwright-driver"
+  gem "capybara-playwright-driver", ">= 0.5.8"
 end
 
 group :test, :development do
@@ -254,8 +254,8 @@ gem "maxminddb"
 
 gem "rails_failover", require: false
 
-gem "faraday"
-gem "faraday-retry"
+gem "faraday", ">= 2.14.1"
+gem "faraday-retry", ">= 2.4.0"
 
 # workaround for faraday-net_http, see
 # https://github.com/ruby/net-imap/issues/16#issuecomment-803086765
@@ -295,14 +295,14 @@ gem "parallel"
 gem "inflection", require: false
 gem "multipart-post", require: false
 gem "faraday-multipart", require: false
-gem "zendesk_api", require: false
+gem "zendesk_api", ">= 2.0.0", require: false
 
 # for discourse-subscriptions
 gem "stripe", require: false
 
 # for discourse-github
 gem "sawyer", require: false
-gem "octokit", require: false
+gem "octokit", ">= 6.0.0", require: false
 
 # for discourse-ai
 gem "tokenizers", require: false
