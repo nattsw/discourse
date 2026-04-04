@@ -8,13 +8,13 @@ source "https://rubygems.org"
 
 gem "bootsnap", require: false, platform: :mri
 
-gem "actionmailer", "~> 8.0.0"
-gem "actionpack", "~> 8.0.0"
+gem "actionmailer", "~> 8.1.0"
+gem "actionpack", "~> 8.1.0"
 gem "actionview", "~> 8.0.0"
 gem "activemodel", "~> 8.0.0"
 gem "activerecord", "~> 8.0.0"
 gem "activesupport", "~> 8.0.0"
-gem "railties", "~> 8.0.0"
+gem "railties", "~> 8.1.0"
 
 gem "propshaft"
 gem "json"
@@ -76,14 +76,14 @@ gem "nokogiri"
 gem "loofah"
 gem "css_parser", require: false
 
-gem "omniauth"
-gem "omniauth-facebook"
+gem "omniauth", ">= 2.1.3"
+gem "omniauth-facebook", ">= 10.0.0"
 gem "omniauth-twitter"
-gem "omniauth-github"
+gem "omniauth-github", ">= 2.0.1"
 
-gem "omniauth-oauth2", require: false
+gem "omniauth-oauth2", ">= 1.8.0", require: false
 
-gem "omniauth-google-oauth2"
+gem "omniauth-google-oauth2", ">= 1.1.0"
 
 gem "oj"
 
